@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Mac files
+.DS_Store
+
+# Environment variables
+.env
+
+# Chroma DB
+data/chroma_db/
+
+# Uploaded PDFs
+data/uploads/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
