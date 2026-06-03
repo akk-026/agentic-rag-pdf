@@ -1,0 +1,229 @@
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:   4%|▍         | 8/199 [00:00<00:02, 79.23it/s]Loading weights:  28%|██▊       | 56/199 [00:00<00:00, 313.74it/s]Loading weights:  88%|████████▊ | 176/199 [00:00<00:00, 716.92it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 616.22it/s]
+The plugin langchain_docling will not be loaded because Docling is being executed with allow_external_plugins=false.
+The plugin langchain_docling will not be loaded because Docling is being executed with allow_external_plugins=false.
+[32m[INFO] 2026-05-31 21:42:59,869 [RapidOCR] base.py:22: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-05-31 21:42:59,878 [RapidOCR] download_file.py:60: File exists and is valid: /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_PP-OCRv4_det_mobile.onnx[0m
+[32m[INFO] 2026-05-31 21:42:59,878 [RapidOCR] main.py:57: Using /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_PP-OCRv4_det_mobile.onnx[0m
+[32m[INFO] 2026-05-31 21:42:59,967 [RapidOCR] base.py:22: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-05-31 21:42:59,969 [RapidOCR] download_file.py:60: File exists and is valid: /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-05-31 21:42:59,969 [RapidOCR] main.py:57: Using /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_ppocr_mobile_v2.0_cls_mobile.onnx[0m
+[32m[INFO] 2026-05-31 21:43:00,010 [RapidOCR] base.py:22: Using engine_name: onnxruntime[0m
+[32m[INFO] 2026-05-31 21:43:00,024 [RapidOCR] download_file.py:60: File exists and is valid: /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_PP-OCRv4_rec_mobile.onnx[0m
+[32m[INFO] 2026-05-31 21:43:00,024 [RapidOCR] main.py:57: Using /Users/akkshitgupta/agentic-rag-pdf/venv/lib/python3.11/site-packages/rapidocr/models/ch_PP-OCRv4_rec_mobile.onnx[0m
+The plugin langchain_docling will not be loaded because Docling is being executed with allow_external_plugins=false.
+Loading weights:   0%|          | 0/770 [00:00<?, ?it/s]Loading weights:  11%|█         | 82/770 [00:00<00:00, 783.58it/s]Loading weights:  42%|████▏     | 326/770 [00:00<00:00, 1654.72it/s]Loading weights:  64%|██████▍   | 491/770 [00:00<00:00, 1641.41it/s]Loading weights:  85%|████████▌ | 655/770 [00:00<00:00, 1548.94it/s]Loading weights: 100%|██████████| 770/770 [00:00<00:00, 1628.33it/s]
+The plugin langchain_docling will not be loaded because Docling is being executed with allow_external_plugins=false.
+
+=== 1) Docling markdown export baseline ===
+Chunks: 63
+Avg words/chunk: 47.8
+Min words/chunk: 1
+Max words/chunk: 359
+
+=== 2) Docling HierarchicalChunker ===
+Chunks: 34
+Avg words/chunk: 96.8
+Min words/chunk: 1
+Max words/chunk: 626
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3413.43it/s]
+
+=== 3) LlamaIndex SemanticSplitterNodeParser ===
+Chunks: 7
+Avg words/chunk: 430.4
+Min words/chunk: 1
+Max words/chunk: 1190
+
+====================================================================================================
+BASELINE
+
+Question: What are the three main HIPAA rules?
+
+[1] score=0.7726
+## 3.  ENSURE THE  SECURITY OF PERSONAL HEALTH  INFORMATION
+
+[2] score=0.7578
+The core  features of HIPAA, the  Health Insurance Portability and  Accountability Act,  revolve around  protecting patient  privacy,  securing  electronic health  intormation, and  standardizing electronic  transactions in  healthcare.  Specifically, it  includes the  Privacy  Rule,  Security  Rule, and  Breach  Notification Rule,  which  collectively ensure the  confidentiality,  integrity,  and availability of  Protected  Health  Information (PHI).
+
+[3] score=0.7276
+## 1. Privacy Rule:
+
+====================================================================================================
+HIERARCHICAL
+
+Question: What are the three main HIPAA rules?
+
+[1] score=0.7578
+The core  features of HIPAA, the  Health Insurance Portability and  Accountability Act,  revolve around  protecting patient  privacy,  securing  electronic health  intormation, and  standardizing electronic  transactions in  healthcare.  Specifically, it  includes the  Privacy  Rule,  Security  Rule, and  Breach  Notification Rule,  which  collectively ensure the  confidentiality,  integrity,  and availability of  Protected  Health  Information (PHI).
+
+[2] score=0.6955
+- medical  records. addition, a
+- Patient education on  privacy protections. Providers and  health plans  are give patients  a  clear written explanation of  how  they  can  Use, keep,  and disclose their health information. Patients  must  be  able to  see  and healthinformation.
+- Ensuring  patient  access to  their copies of  their records, and  request amendments. In accessible to  patients.
+- reauiro  de
+- history  of  most
+- get disclosures must be  made Receiving  patient  consent  before information is released.  Patient authorization to disclose information must  meet  specific requir
+
+[3] score=0.6881
+HIPAA Privacy-Major Features: Link:  https://compliance.georgetown.edu/other/hipaa/privacy major-features/
+
+====================================================================================================
+SEMANTIC
+
+Question: What are the three main HIPAA rules?
+
+[1] score=0.7595
+## HIPPA:
+
+<!-- image -->
+
+<!-- image -->
+
+The core  features of HIPAA, the  Health Insurance Portability and  Accountability Act,  revolve around  protecting patient  privacy,  securing  electronic health  intormation, and  standardizing electronic  transactions in  healthcare.  Specifically, it  includes the  Privacy  Rule,  Security  Rule, and  Breach  Notification Rule,  which  collectively ensure the  confidentiality,  integrity,  and availability of  Protected  Health  Information (PHI).
+
+Here's  a  more detailed breakdown:
+
+## 1. Privacy Rule:
+
+- Establishes  national standards tor prot
+
+[2] score=0.7568
+## 4. Administrative Simplification:
+
+- Includes the Transaction and Code Set Rule, which standardizes electronic transactions in healthcare, improving efficiency and reducing costs.
+- Also covers the National ldentifier Standards, which set standards for healthcare providers,  health  plans,  and  employers.
+
+HIPAA Privacy-Major Features: Link:  https://compliance.georgetown.edu/other/hipaa/privacy major-features/
+
+## 1.  CONSUMER  CONTROL OVER  HEALTH  INFORMATION
+
+- medical  records. addition, a
+- Patient education on  privacy protections. Providers and  health plans  are give patients  a  
+
+[3] score=0.5746
+| Intended Purpose                                                    |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
+| S.                                                                | Type                                                              | StandardName                                                       
+
+====================================================================================================
+BASELINE
+
+Question: What does the Security Rule require?
+
+[1] score=0.8302
+## 2. Security Rule:
+
+[2] score=0.6871
+## 1. Privacy Rule:
+
+[3] score=0.6784
+## 3. Breach Notification Rule:
+
+====================================================================================================
+HIERARCHICAL
+
+Question: What does the Security Rule require?
+
+[1] score=0.6536
+The following list is indicative ond advised to be used where applicable and  os required. representative  und  not  comprehensive or definitive.  These standards  ore GOALS
+
+[2] score=0.6073
+- Sets national standards for safeguarding electronic  Protected Health Information (ePHI).
+- Requires covered entities to implement appropriate administrative, physical, and technical safeguards to ensure the confidentiality, integrity, and  security of ePHI.
+- Includes provisions for risk analysis and management to identify and address potential security threats.
+
+[3] score=0.6020
+NO 28, Type = Data Privacy and Security. NO 28, Standard Name = IS0/TS 14441:2013 Health Informatics - Security & Privacy Requirements of EHR Systems for Use in Conformity Assessment. NO 28, Intended Purpose = Basis security and privacy rcquirements. 29, Type = Information Security Management. 29, Standard Name = ISO/DIS 27799 Health informatics - Infornation Security Management in Health using ISO/|EC 27O02. 29, Intended Purpose = Overall information security management. 30, Type = Privilege Management and Access Control. 30, Standard Name = ISO 22600:2014 lHealth informatics - Privilege Mana
+
+====================================================================================================
+SEMANTIC
+
+Question: What does the Security Rule require?
+
+[1] score=0.6080
+## 4. Administrative Simplification:
+
+- Includes the Transaction and Code Set Rule, which standardizes electronic transactions in healthcare, improving efficiency and reducing costs.
+- Also covers the National ldentifier Standards, which set standards for healthcare providers,  health  plans,  and  employers.
+
+HIPAA Privacy-Major Features: Link:  https://compliance.georgetown.edu/other/hipaa/privacy major-features/
+
+## 1.  CONSUMER  CONTROL OVER  HEALTH  INFORMATION
+
+- medical  records. addition, a
+- Patient education on  privacy protections. Providers and  health plans  are give patients  a  
+
+[2] score=0.5960
+## HIPPA:
+
+<!-- image -->
+
+<!-- image -->
+
+The core  features of HIPAA, the  Health Insurance Portability and  Accountability Act,  revolve around  protecting patient  privacy,  securing  electronic health  intormation, and  standardizing electronic  transactions in  healthcare.  Specifically, it  includes the  Privacy  Rule,  Security  Rule, and  Breach  Notification Rule,  which  collectively ensure the  confidentiality,  integrity,  and availability of  Protected  Health  Information (PHI).
+
+Here's  a  more detailed breakdown:
+
+## 1. Privacy Rule:
+
+- Establishes  national standards tor prot
+
+[3] score=0.5691
+| Intended Purpose                                                    |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
+| S.                                                                | Type                                                              | StandardName                                                       
+
+====================================================================================================
+BASELINE
+
+Question: What standards are listed for EHR in India?
+
+[1] score=0.8401
+This document  provides a structurcd  overview  of  the  key  EHR  standards  with  respect  to  Indian  healthcare system.  For  every  aspect of data/intormation  that is  part  of  any healthcare record system has  been addressed with  a short  guideline regarding  implementation  specific  to  the  item-in-context  included.  Various non related  recommendations  from  previous  edition  have  been removed  to  better streamline  the  set of standards selected  and  achieve  harmony among  them.  A detailed recommendation  on the interoperability  and standards,  clinical informatics  stan
+
+[2] score=0.8108
+## ELECTRONIC HEALTH  RECORD (EHR)  STAND  ARDS FOR  INDIA
+
+[3] score=0.7917
+In  Septenber  2013  the  Ministry of  Health  &amp; Fannily  Welfare  (MoH&amp;FW) notified the  Electronic Health  Record (EHR) Standards for  India,  The  set  of  standards  given  therein  were  chOsen  from the  best  available  and  used standards  applicable to  Electronic  Health  Records from  around  the world  keeping in  view  their suitability  to and  applicability  in Indis.  The  Committee  constituted to recommend  the  standards  drew  from expe practitioners,  goverment  officials,  technologists, and industry.  The  notified  standards  were  not  oy Supported by professio
+
+====================================================================================================
+HIERARCHICAL
+
+Question: What standards are listed for EHR in India?
+
+[1] score=0.8401
+This document  provides a structurcd  overview  of  the  key  EHR  standards  with  respect  to  Indian  healthcare system.  For  every  aspect of data/intormation  that is  part  of  any healthcare record system has  been addressed with  a short  guideline regarding  implementation  specific  to  the  item-in-context  included.  Various non related  recommendations  from  previous  edition  have  been removed  to  better streamline  the  set of standards selected  and  achieve  harmony among  them.  A detailed recommendation  on the interoperability  and standards,  clinical informatics  stan
+
+[2] score=0.8107
+In  Septenber  2013  the  Ministry of  Health  & Fannily  Welfare  (MoH&FW) notified the  Electronic Health  Record (EHR) Standards for  India,  The  set  of  standards  given  therein  were  chOsen  from the  best  available  and  used standards  applicable to  Electronic  Health  Records from  around  the world  keeping in  view  their suitability  to and  applicability  in Indis.  The  Committee  constituted to recommend  the  standards  drew  from expe practitioners,  goverment  officials,  technologists, and industry.  The  notified  standards  were  not  oy Supported by professional bodi
+
+[3] score=0.7474
+This  document  provides  a set of recommendations  relevant  to  adoption  of electronic  health  informatics standards in  EHR/EMR  and  other similar clinical  information  systems. The  scope  is  limited  to  identifying the standards,  heir  intended  purposes  in  such  systems,  followed  by  a short  guideline-for-implementation approach. It  is  understood that with  adoption  of these standards properly, the data  capture, storage, view. presentation,  and  transmission  will  be  standardized  to  levels  that  will  achieve  interoperability  of both meaning and data contained in 
+
+====================================================================================================
+SEMANTIC
+
+Question: What standards are listed for EHR in India?
+
+[1] score=0.6833
+but various technical and social commentators  as  well,  as  being  a step  in  the  right  direction.  MoH&amp;FW  moved  ahead  with  lacilitaang e adopton,  as  next  steps,  and  in last  two  years  the  Ministry  has  made  available  standards  like  SNOMED  C1 free-for-use  in  the  country  as  well  as  appoint  interim  National  Release  Center  (NRC)  to  handle  this  clinical terminology standard that is fast gaining widespread acceptance amongst  the various healthcare IT stakeholder communities worldwide.
+
+At  the  time  of  notifying the  standards  in  September  2013,  it 
+
+[2] score=0.6566
+| Intended Purpose                                                    |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
+| S.                                                                | Type                                                              | StandardName                                                       
+
+[3] score=0.6216
+## 4. Administrative Simplification:
+
+- Includes the Transaction and Code Set Rule, which standardizes electronic transactions in healthcare, improving efficiency and reducing costs.
+- Also covers the National ldentifier Standards, which set standards for healthcare providers,  health  plans,  and  employers.
+
+HIPAA Privacy-Major Features: Link:  https://compliance.georgetown.edu/other/hipaa/privacy major-features/
+
+## 1.  CONSUMER  CONTROL OVER  HEALTH  INFORMATION
+
+- medical  records. addition, a
+- Patient education on  privacy protections. Providers and  health plans  are give patients  a  

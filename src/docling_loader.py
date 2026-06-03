@@ -1,38 +1,68 @@
-import os
-
-os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
 from pathlib import Path
 from typing import List, Union
 
 from langchain_core.documents import Document
-from langchain_docling import DoclingLoader
+
+from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import PdfPipelineOptions, TableStructureOptions
+from docling.document_converter import DocumentConverter, PdfFormatOption
+from docling.chunking import HierarchicalChunker
 
 
 def load_pdf_documents(file_paths: Union[str, List[str]]) -> List[Document]:
-    """
-    Load one or more PDFs using Docling and return LangChain Documents.
-
-    DoclingLoader can accept a single local file path or an iterable of file paths.
-    It returns chunk-oriented documents by default, which is good for RAG.
-    """
     if isinstance(file_paths, str):
         file_paths = [file_paths]
 
-    normalized_paths = [str(Path(p)) for p in file_paths]
+    pipeline_options = PdfPipelineOptions()
+    pipeline_options.accelerator_options = AcceleratorOptions(
+        num_threads=8,
+        device=AcceleratorDevice.CPU,   # force CPU, avoid MPS
+    )
+    pipeline_options.do_ocr = True
+    pipeline_options.do_table_structure = True
+    pipeline_options.table_structure_options = TableStructureOptions(
+        do_cell_matching=True
+    )
 
-    loader = DoclingLoader(file_path=normalized_paths)
-    docs = loader.load()
+    converter = DocumentConverter(
+        format_options={
+            InputFormat.PDF: PdfFormatOption(
+                pipeline_options=pipeline_options,
+            )
+        }
+    )
 
-    return docs
+    chunker = HierarchicalChunker()
+    all_docs: List[Document] = []
+
+    for file_path in file_paths:
+        pdf_path = Path(file_path)
+        result = converter.convert(pdf_path)
+        doc = result.document
+
+        for i, chunk in enumerate(chunker.chunk(doc)):
+            text = getattr(chunk, "text", "") or ""
+            if not text.strip():
+                continue
+
+            metadata = {
+                "source": pdf_path.name,
+                "chunk_index": i,
+            }
+
+            all_docs.append(
+                Document(
+                    page_content=text.strip(),
+                    metadata=metadata,
+                )
+            )
+
+    return all_docs
 
 
 def preview_documents(docs: List[Document], n: int = 3) -> None:
-    """
-    Small helper to inspect loaded chunks during development.
-    """
     print(f"\nLoaded {len(docs)} document chunks\n")
-
     for i, doc in enumerate(docs[:n], start=1):
         print("=" * 80)
         print(f"Chunk {i}")

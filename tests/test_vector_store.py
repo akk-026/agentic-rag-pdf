@@ -1,0 +1,28 @@
+from src.docling_loader import load_pdf_documents
+from src.vector_store import (
+    reset_collection,
+    index_documents,
+    search
+)
+
+docs = load_pdf_documents(
+    "data/uploads/healthcare_india_hipaa.pdf"
+)
+
+reset_collection()
+
+index_documents(docs)
+
+result = search(
+    "What are the three HIPAA rules?"
+)
+
+for i, doc in enumerate(result["documents"][0], start=1):
+    print("\n" + "=" * 80)
+    print(f"Result {i}")
+    print(doc[:1000])
+
+    print(
+        "\nDistance:",
+        result["distances"][0][i - 1]
+    )

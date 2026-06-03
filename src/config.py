@@ -1,12 +1,4 @@
 # ==============================
-# CHUNKING CONFIGURATION
-# ==============================
-
-CHUNK_SIZE = 800
-CHUNK_OVERLAP = 150
-
-
-# ==============================
 # EMBEDDING MODEL
 # ==============================
 
@@ -34,3 +26,14 @@ TOP_K_RESULTS = 5
 # ==============================
 
 UPLOAD_DIR = "data/uploads"
+
+
+# ==============================
+# DOCLING CONFIGURATION
+# ==============================
+
+DO_OCR = True
+
+DO_TABLE_STRUCTURE = True
+
+NUM_THREADS = 8
