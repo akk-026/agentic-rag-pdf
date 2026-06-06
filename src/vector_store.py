@@ -38,8 +38,8 @@ def index_documents(docs):
     ]
 
     ids = [
-        f"{doc.metadata['source']}_{i}"
-        for i, doc in enumerate(docs)
+        f"{doc.metadata['source']}_{doc.metadata['chunk_index']}"
+        for doc in docs
     ]
 
     embeddings = embed_texts(texts)
