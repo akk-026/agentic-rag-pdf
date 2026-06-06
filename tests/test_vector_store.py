@@ -20,6 +20,10 @@ result = search(
 for i, doc in enumerate(result["documents"][0], start=1):
     print("\n" + "=" * 80)
     print(f"Result {i}")
+    
+    print("\nMetadata:")
+    print(result["metadatas"][0][i-1])
+    
     print(doc[:1000])
 
     print(
