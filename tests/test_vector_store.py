@@ -5,16 +5,17 @@ from src.vector_store import (
     search
 )
 
-docs = load_pdf_documents(
-    "data/uploads/healthcare_india_hipaa.pdf"
-)
+docs = load_pdf_documents([
+    "data/uploads/healthcare_india_hipaa.pdf",
+    "data/uploads/pdf.pdf"
+])
 
 reset_collection()
 
 index_documents(docs)
 
 result = search(
-    "What are the three HIPAA rules?"
+    "What was 3M net sales?"
 )
 
 for i, doc in enumerate(result["documents"][0], start=1):
@@ -23,7 +24,7 @@ for i, doc in enumerate(result["documents"][0], start=1):
     
     print("\nMetadata:")
     print(result["metadatas"][0][i-1])
-    
+
     print(doc[:1000])
 
     print(

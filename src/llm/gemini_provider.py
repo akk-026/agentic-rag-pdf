@@ -5,6 +5,8 @@ import google.generativeai as genai
 
 from src.llm.base import BaseLLM
 
+from google.api_core.exceptions import ResourceExhausted
+
 load_dotenv()
 
 
@@ -20,5 +22,13 @@ class GeminiProvider(BaseLLM):
         self.model = genai.GenerativeModel(model_name)
 
     def generate(self, prompt: str) -> str:
-        response = self.model.generate_content(prompt)
-        return response.text or ""
+        try:
+            response = self.model.generate_content(prompt)
+            return response.text
+
+        except ResourceExhausted:
+            return (
+            "Gemini quota exceeded. "
+            "Wait a minute and try again."
+        )
+    
