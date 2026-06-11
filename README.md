@@ -278,4 +278,3 @@ tests/
 
 **Akkshit Gupta**
 
-AI/ML Engineer | Retrieval-Augmented Generation | LLM Systems | Information Retrieval
