@@ -1,280 +1,183 @@
-# Enterprise Agentic RAG for Multi-Document Intelligence
+# Agentic RAG PDF Assistant
 
-An enterprise-grade Agentic Retrieval-Augmented Generation (RAG) system designed for understanding, retrieving, reasoning over, and synthesizing information from large collections of documents.
+An enterprise-style Agentic Retrieval-Augmented Generation (RAG) system for multi-document question answering using Docling, ChromaDB, LangGraph, and Gemini.
 
-Built using Docling, ChromaDB, BGE Embeddings, Hybrid Retrieval, Reranking, and Gemini LLMs, the system supports multi-document question answering, source-grounded responses, conversational memory, query rewriting, and agentic retrieval workflows.
+## Features
 
----
+* Multi-document PDF ingestion
+* OCR-aware document parsing with Docling
+* Hierarchical chunking
+* ChromaDB vector database
+* Dense retrieval using BGE embeddings
+* BM25 lexical retrieval
+* Hybrid retrieval with Reciprocal Rank Fusion (RRF)
+* Cross-encoder reranking
+* Query rewriting
+* Retrieval grading and retry loops
+* Conversation memory
+* LangGraph-based agent workflow
+* Source-grounded answers with citations
+* Streamlit user interface
 
-## Key Features
-
-### Intelligent Document Processing
-
-* Multi-document ingestion pipeline
-* OCR support for scanned PDFs
-* Structured parsing using Docling
-* Hierarchical semantic chunking
-* Page-level provenance extraction
-* Metadata preservation
-
-### Advanced Retrieval Pipeline
-
-* Dense semantic retrieval
-* BM25 keyword retrieval
-* Hybrid Search
-* Reciprocal Rank Fusion (RRF)
-* BGE Cross-Encoder Reranking
-* Multi-document retrieval
-* Context-aware ranking
-
-### Agentic Retrieval Workflows
-
-* Query planning
-* Query rewriting and expansion
-* Iterative retrieval loops
-* Dynamic context refinement
-* Multi-step reasoning
-* Retrieval validation
-
-### Conversational Intelligence
-
-* Session memory
-* Multi-turn conversations
-* Context retention
-* Follow-up question understanding
-* Conversation-aware retrieval
-
-### Multi-Document Reasoning
-
-* Cross-document synthesis
-* Contradiction detection
-* Comparative analysis
-* Evidence aggregation
-* Knowledge consolidation
-
-### Source Attribution
-
-* Deterministic citations
-* Page-level references
-* Document provenance tracking
-* Explainable retrieval
-
-### Enterprise UI
-
-* Streamlit-based interface
-* Multi-file upload
-* Interactive document querying
-* Citation display
-* Retrieval transparency
-* Real-time responses
-
----
-
-## System Architecture
+## Architecture
 
 ```text
-Documents
-     │
-     ▼
-Docling Ingestion
-     │
-     ▼
-OCR + Parsing
-     │
-     ▼
-Hierarchical Chunking
-     │
-     ▼
-BGE Embeddings
-     │
-     ▼
-ChromaDB Vector Store
-     │
-     ▼
-Hybrid Retrieval
- ├── Dense Search
- ├── BM25 Search
- └── RRF Fusion
-     │
-     ▼
-BGE Reranker
-     │
-     ▼
-Agent Layer
- ├── Query Rewriting
- ├── Retrieval Planning
- ├── Memory Management
- └── Iterative Retrieval
-     │
-     ▼
-Gemini LLM
-     │
-     ▼
-Answer + Citations
+                ┌─────────────────┐
+                │   Upload PDFs   │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │     Docling     │
+                │ OCR + Parsing   │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │    Chunking     │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ BGE Embeddings  │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │    ChromaDB     │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ User Question   │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ Query Rewrite   │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ Hybrid Search   │
+                │ Dense + BM25    │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │   RRF Fusion    │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ Cross Encoder   │
+                │   Reranking     │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │   LangGraph     │
+                │ Agent Workflow  │
+                └────────┬────────┘
+                         │
+                         ▼
+                ┌─────────────────┐
+                │ Gemini Response │
+                │ + Citations     │
+                └─────────────────┘
 ```
 
----
-
-## Technology Stack
-
-### Document Processing
-
-* Docling
-
-### Embeddings
-
-* BAAI/bge-base-en-v1.5
-
-### Vector Database
-
-* ChromaDB
-
-### Retrieval
-
-* BM25
-* Reciprocal Rank Fusion (RRF)
-* Hybrid Search
-
-### Reranking
-
-* BGE Cross Encoder Reranker
-
-### LLM
-
-* Google Gemini
-
-### Frontend
-
-* Streamlit
-
-### Language
+## Tech Stack
 
 * Python
+* Docling
+* ChromaDB
+* LangChain
+* LangGraph
+* Streamlit
+* Google Gemini
+* Sentence Transformers
+* BM25
+* Cross-Encoder Reranking
 
----
+## Setup
+
+### Clone Repository
+
+```bash
+git clone https://github.com/akk-026/agentic-rag-pdf.git
+cd agentic-rag-pdf
+```
+
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Create .env File
+
+```env
+GOOGLE_API_KEY=your_api_key_here
+```
+
+## Running the Project
+
+### Launch Streamlit App
+
+```bash
+streamlit run app.py
+```
+
+### Run Tests
+
+```bash
+python -m tests.test_ingest
+python -m tests.test_vector_store
+python -m tests.test_hybrid_retrieval
+python -m tests.test_agent
+```
+
+## How It Works
+
+1. Upload one or more PDFs.
+2. Documents are parsed using Docling.
+3. Chunks are created and embedded.
+4. Embeddings are stored in ChromaDB.
+5. User questions are rewritten when necessary.
+6. Hybrid retrieval combines Dense Search and BM25.
+7. Results are fused using RRF and reranked using a Cross Encoder.
+8. LangGraph orchestrates the retrieval and generation workflow.
+9. Gemini generates grounded answers with citations.
 
 ## Example Use Cases
 
-### Regulatory Compliance
+* Financial report analysis
+* Healthcare compliance search
+* Enterprise document Q&A
+* Multi-document reasoning
+* Conversational document assistants
 
-**Question**
+## Future Improvements
 
-```text
-What are the three main HIPAA rules?
-```
+* DOCX and PPTX support
+* RAG evaluation framework
+* Multi-agent workflows
+* Cloud deployment
 
-**Answer**
+## License
 
-```text
-Privacy Rule
-Security Rule
-Breach Notification Rule
-```
-
-with source citations.
-
----
-
-### Financial Analysis
-
-**Question**
-
-```text
-What was 3M's worldwide net sales in Q2 2023?
-```
-
-**Answer**
-
-```text
-$8.325 billion
-```
-
-with page-level references.
-
----
-
-### Cross-Document Reasoning
-
-**Question**
-
-```text
-Compare privacy requirements discussed across multiple regulatory documents.
-```
-
-**System Workflow**
-
-```text
-Retrieve Relevant Evidence
-       ↓
-Aggregate Findings
-       ↓
-Reason Across Sources
-       ↓
-Generate Synthesized Answer
-       ↓
-Provide Citations
-```
-
----
-
-## Project Structure
-
-```text
-src/
-│
-├── agent.py
-├── config.py
-├── docling_loader.py
-├── embeddings.py
-├── vector_store.py
-├── retriever.py
-├── hybrid_retriever.py
-├── chunking.py
-│
-├── llm/
-│   ├── base.py
-│   ├── factory.py
-│   └── gemini_provider.py
-│
-└── memory/
-    └── conversation_memory.py
-
-tests/
-│
-├── test_ingest.py
-├── test_vector_store.py
-├── test_agent.py
-└── retrieval_benchmarks.py
-```
-
----
-
-## Highlights
-
-* Enterprise-style architecture
-* Agentic RAG workflow
-* Hybrid retrieval + reranking
-* Multi-document intelligence
-* Source-grounded generation
-* Explainable responses
-* Scalable design
-* Modular component architecture
-
----
-
-## Future Enhancements
-
-* Knowledge graph integration
-* Multi-modal document understanding
-* Long-term memory
-* Autonomous report generation
-* Retrieval evaluation dashboards
-* Human feedback loops
-* Multi-agent orchestration
-
----
-
-## Author
-
-**Akkshit Gupta**
-
+For educational and research purposes.
