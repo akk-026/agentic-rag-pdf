@@ -6,7 +6,7 @@ from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 
 from src.config import TOP_K_RESULTS
-from src.vector_store import collection, search
+import src.vector_store as vector_store
 
 
 _TOKEN_RE = re.compile(r"\b\w+\b")
@@ -41,7 +41,7 @@ class HybridRetriever:
         Reload all documents from Chroma and rebuild the BM25 index.
         Call this again after indexing new PDFs.
         """
-        data = collection.get(include=["documents", "metadatas"])
+        data = vector_store.collection.get(include=["documents", "metadatas"])
 
         self.ids = data.get("ids", []) or []
         self.documents = data.get("documents", []) or []
@@ -51,7 +51,7 @@ class HybridRetriever:
         self.bm25 = BM25Okapi(tokenized_corpus) if tokenized_corpus else None
 
     def _dense_candidates(self, query: str, top_k: int) -> List[RetrievedChunk]:
-        results = search(query=query, top_k=top_k)
+        results = vector_store.search(query=query, top_k=top_k)
 
         dense_candidates: List[RetrievedChunk] = []
 
