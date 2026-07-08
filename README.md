@@ -1,148 +1,219 @@
-# Agentic RAG PDF Assistant
+# 📄 Agentic RAG PDF Assistant
 
-An enterprise-style Agentic Retrieval-Augmented Generation (RAG) system for multi-document question answering using Docling, ChromaDB, LangGraph, and Gemini.
+An enterprise-grade **Agentic Retrieval-Augmented Generation (RAG)** system for conversational question answering over multiple PDFs using **LangGraph ReAct Agents**, **Hybrid Retrieval**, **ChromaDB**, and **persistent chat memory**.
 
-## Features
+The assistant intelligently decides when to:
+- Search uploaded documents
+- Search the web
+- Perform calculations
 
-* Multi-document PDF ingestion
-* OCR-aware document parsing with Docling
-* Hierarchical chunking
-* ChromaDB vector database
-* Dense retrieval using BGE embeddings
-* BM25 lexical retrieval
-* Hybrid retrieval with Reciprocal Rank Fusion (RRF)
-* Cross-encoder reranking
-* Query rewriting
-* Retrieval grading and retry loops
-* Conversation memory
-* LangGraph-based agent workflow
-* Source-grounded answers with citations
-* Streamlit user interface
+while maintaining conversation history and providing grounded answers with source references.
 
-## Architecture
+---
 
-```text
-                ┌─────────────────┐
-                │   Upload PDFs   │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │     Docling     │
-                │ OCR + Parsing   │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │    Chunking     │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ BGE Embeddings  │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │    ChromaDB     │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ User Question   │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ Query Rewrite   │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ Hybrid Search   │
-                │ Dense + BM25    │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │   RRF Fusion    │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ Cross Encoder   │
-                │   Reranking     │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │   LangGraph     │
-                │ Agent Workflow  │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │ Gemini Response │
-                │ + Citations     │
-                └─────────────────┘
+## ✨ Features
+
+- 📄 Multi-document PDF ingestion
+- 🔍 OCR-aware parsing with Docling
+- ✂️ Hierarchical chunking
+- 🧠 BGE Embeddings
+- 🗄️ ChromaDB Vector Store
+- 🔎 BM25 Lexical Retrieval
+- ⚡ Hybrid Retrieval (Dense + BM25)
+- 🎯 Reciprocal Rank Fusion (RRF)
+- 🏆 Cross-Encoder Reranking
+- 🤖 LangGraph ReAct Agent
+- 🛠️ Tool Calling
+  - Document Search
+  - Web Search
+  - Calculator
+- 💬 Persistent SQLite Chat Memory
+- 📚 Source-grounded Responses
+- 🌐 Multiple LLM Providers
+  - Gemini
+  - Groq
+  - OpenRouter
+- 🎨 Streamlit UI
+
+---
+
+# 🏗️ Architecture
+
+```
+                    User Question
+                           │
+                           ▼
+                 LangGraph ReAct Agent
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+ Search Documents      Web Search       Calculator
+        │
+        ▼
+ Hybrid Retriever
+(Dense + BM25)
+        │
+        ▼
+ Reciprocal Rank Fusion
+        │
+        ▼
+ Cross Encoder Reranker
+        │
+        ▼
+ Relevant Context
+        │
+        ▼
+      LLM Response
+        │
+        ▼
+ Grounded Answer + Sources
 ```
 
-## Tech Stack
+---
 
-* Python
-* Docling
-* ChromaDB
-* LangChain
-* LangGraph
-* Streamlit
-* Google Gemini
-* Sentence Transformers
-* BM25
-* Cross-Encoder Reranking
+# 🔍 Retrieval Pipeline
 
-## Setup
+```
+User Query
+     │
+     ▼
+Dense Retrieval (Embeddings)
+     │
+     ├─────────────┐
+     ▼             ▼
+ BM25         Dense Search
+     │             │
+     └──────┬──────┘
+            ▼
+ Reciprocal Rank Fusion
+            ▼
+ Cross Encoder Reranker
+            ▼
+ Final Retrieved Chunks
+```
 
-### Clone Repository
+---
+
+# 🤖 Agent Workflow
+
+```
+User
+ │
+ ▼
+LangGraph ReAct Agent
+ │
+ ├── search_documents
+ ├── web_search
+ └── calculator
+ │
+ ▼
+LLM
+ │
+ ▼
+Final Answer
+```
+
+---
+
+# 🛠 Tech Stack
+
+- Python
+- LangChain
+- LangGraph
+- Streamlit
+- ChromaDB
+- Docling
+- Sentence Transformers
+- BM25 Retriever
+- Cross Encoder Reranker
+- SQLite
+- Gemini
+- Groq
+- OpenRouter
+
+---
+
+# 📂 Project Structure
+
+```
+src/
+│
+├── agent.py
+├── db.py
+├── hybrid_retriever.py
+├── retriever.py
+├── vector_store.py
+├── embeddings.py
+├── tools.py
+│
+├── llm/
+│   ├── factory.py
+│   ├── gemini_provider.py
+│   └── groq_provider.py
+│
+└── ...
+```
+
+---
+
+# 🚀 Installation
+
+## Clone the repository
 
 ```bash
 git clone https://github.com/akk-026/agentic-rag-pdf.git
 cd agentic-rag-pdf
 ```
 
-### Create Virtual Environment
+## Create a virtual environment
 
 ```bash
 python -m venv venv
+```
+
+### macOS/Linux
+
+```bash
 source venv/bin/activate
 ```
 
-Windows:
+### Windows
 
-```bash
+```powershell
 venv\Scripts\activate
 ```
 
-### Install Dependencies
+---
+
+## Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Create .env File
+---
+
+## Configure environment variables
+
+Create a `.env` file.
 
 ```env
-GOOGLE_API_KEY=your_api_key_here
+GOOGLE_API_KEY=your_google_api_key
+GROQ_API_KEY=your_groq_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-## Running the Project
+---
 
-### Launch Streamlit App
+# ▶️ Running the Application
 
 ```bash
 streamlit run app.py
 ```
 
-### Run Tests
+---
+
+# 🧪 Running Tests
 
 ```bash
 python -m tests.test_ingest
@@ -151,33 +222,45 @@ python -m tests.test_hybrid_retrieval
 python -m tests.test_agent
 ```
 
-## How It Works
+---
 
-1. Upload one or more PDFs.
-2. Documents are parsed using Docling.
-3. Chunks are created and embedded.
-4. Embeddings are stored in ChromaDB.
-5. User questions are rewritten when necessary.
-6. Hybrid retrieval combines Dense Search and BM25.
-7. Results are fused using RRF and reranked using a Cross Encoder.
-8. LangGraph orchestrates the retrieval and generation workflow.
-9. Gemini generates grounded answers with citations.
+# 💡 Example
 
-## Example Use Cases
+### User
 
-* Financial report analysis
-* Healthcare compliance search
-* Enterprise document Q&A
-* Multi-document reasoning
-* Conversational document assistants
+```
+Where is Curiflow located?
+```
 
-## Future Improvements
+### Assistant
 
-* DOCX and PPTX support
-* RAG evaluation framework
-* Multi-agent workflows
-* Cloud deployment
+```
+Curiflow is located in Hiranandani Gardens,
+Powai, Mumbai.
 
-## License
+Sources:
+• About Us and Our Work.pdf (Page 4)
+```
 
-For educational and research purposes.
+---
+
+# 🔮 Future Improvements
+
+- True token streaming
+- Query rewriting
+- Retrieval grading
+- RAG evaluation (RAGAS / DeepEval)
+- FastAPI backend
+- Docker support
+- Authentication
+- Cloud deployment
+
+---
+
+# 📄 License
+
+This project is intended for educational and research purposes.
+
+---
+
+# ⭐ If you found this project useful, consider giving it a star!
