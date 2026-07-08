@@ -22,3 +22,5 @@ data/uploads/
 
 # VS Code
 .vscode/
+
+data/chats.db

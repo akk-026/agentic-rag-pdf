@@ -1,15 +1,10 @@
 from src.agent import RAGAgent
+from src.db import create_chat, init_db
+
+init_db()
+chat_id = create_chat("Test")
 
 agent = RAGAgent()
 
-print(
-    agent.answer(
-        "What was 3M's worldwide net sales in Q2 2023?"
-    )
-)
-
-print(
-    agent.answer(
-        "What page was that information on?"
-    )
-)
+print(agent.answer("Give me a summary of Curiflow.", chat_id))
+print(agent.answer("What roles do they offer?", chat_id))
