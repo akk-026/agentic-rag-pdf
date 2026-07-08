@@ -2,11 +2,12 @@ import re
 from dataclasses import dataclass
 from typing import List, Literal, Optional
 
-from rank_bm25 import BM25Okapi
+from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
 
 from src.config import TOP_K_RESULTS
 import src.vector_store as vector_store
+from src.retriever import build_bm25_retriever
 
 
 _TOKEN_RE = re.compile(r"\b\w+\b")
@@ -30,6 +31,7 @@ class RetrievedChunk:
 class HybridRetriever:
     """
     Dense search + BM25 + RRF fusion + BGE reranking.
+    Uses LangChain vectorstore and BM25 retriever where practical.
     """
 
     def __init__(self, reranker_model: str = "BAAI/bge-reranker-base"):
@@ -38,62 +40,96 @@ class HybridRetriever:
 
     def refresh(self) -> None:
         """
-        Reload all documents from Chroma and rebuild the BM25 index.
-        Call this again after indexing new PDFs.
+        Reload all documents from Chroma and rebuild the BM25 retriever.
         """
         data = vector_store.collection.get(include=["documents", "metadatas"])
 
-        self.ids = data.get("ids", []) or []
-        self.documents = data.get("documents", []) or []
-        self.metadatas = data.get("metadatas", []) or []
+        raw_documents = data.get("documents", []) or []
+        raw_metadatas = data.get("metadatas", []) or []
+        raw_ids = data.get("ids", []) or []
 
-        tokenized_corpus = [tokenize(doc) for doc in self.documents]
-        self.bm25 = BM25Okapi(tokenized_corpus) if tokenized_corpus else None
+        self.documents: List[Document] = []
+
+        for i, text in enumerate(raw_documents):
+            metadata = dict(raw_metadatas[i] or {})
+
+            if i < len(raw_ids):
+                metadata["id"] = raw_ids[i]
+            else:
+                source = metadata.get("source", "unknown")
+                chunk_index = metadata.get("chunk_index", i)
+                metadata["id"] = f"{source}_{chunk_index}"
+
+            self.documents.append(
+                Document(
+                    page_content=text,
+                    metadata=metadata,
+                )
+            )
+
+        self.ids = [doc.metadata["id"] for doc in self.documents]
+        self.metadatas = [doc.metadata for doc in self.documents]
+
+        self.bm25_retriever = (
+            build_bm25_retriever(self.documents, k=20)
+            if self.documents
+            else None
+        )
 
     def _dense_candidates(self, query: str, top_k: int) -> List[RetrievedChunk]:
-        results = vector_store.search(query=query, top_k=top_k)
-
         dense_candidates: List[RetrievedChunk] = []
 
-        for doc_id, doc, meta, distance in zip(
-            results["ids"][0],
-            results["documents"][0],
-            results["metadatas"][0],
-            results["distances"][0],
-        ):
+        try:
+            results = vector_store.vectorstore.similarity_search_with_score(
+                query,
+                k=top_k,
+            )
+        except Exception:
+            docs = vector_store.vectorstore.similarity_search(query, k=top_k)
+            results = [(doc, 0.0) for doc in docs]
+
+        for doc, score in results:
+            meta = dict(doc.metadata or {})
+            doc_id = meta.get("id")
+            if not doc_id:
+                source = meta.get("source", "unknown")
+                chunk_index = meta.get("chunk_index", 0)
+                doc_id = f"{source}_{chunk_index}"
+
             dense_candidates.append(
                 RetrievedChunk(
-                    id=doc_id,
-                    content=doc,
+                    id=str(doc_id),
+                    content=doc.page_content,
                     metadata=meta,
-                    dense_distance=float(distance),
+                    dense_distance=float(score) if score is not None else None,
                 )
             )
 
         return dense_candidates
 
     def _bm25_candidates(self, query: str, top_k: int) -> List[RetrievedChunk]:
-        if self.bm25 is None or not self.documents:
+        if self.bm25_retriever is None or not self.documents:
             return []
 
-        query_tokens = tokenize(query)
-        scores = self.bm25.get_scores(query_tokens)
-
-        ranked_indices = sorted(
-            range(len(scores)),
-            key=lambda i: scores[i],
-            reverse=True,
-        )[:top_k]
+        self.bm25_retriever.k = top_k
+        docs = self.bm25_retriever.invoke(query)
 
         bm25_candidates: List[RetrievedChunk] = []
 
-        for idx in ranked_indices:
+        for rank, doc in enumerate(docs[:top_k], start=1):
+            meta = dict(doc.metadata or {})
+            doc_id = meta.get("id")
+            if not doc_id:
+                source = meta.get("source", "unknown")
+                chunk_index = meta.get("chunk_index", 0)
+                doc_id = f"{source}_{chunk_index}"
+
             bm25_candidates.append(
                 RetrievedChunk(
-                    id=self.ids[idx],
-                    content=self.documents[idx],
-                    metadata=self.metadatas[idx],
-                    bm25_score=float(scores[idx]),
+                    id=str(doc_id),
+                    content=doc.page_content,
+                    metadata=meta,
+                    bm25_score=1.0 / rank,
                 )
             )
 
@@ -105,12 +141,9 @@ class HybridRetriever:
         bm25_candidates: List[RetrievedChunk],
         k: int = 60,
     ) -> List[RetrievedChunk]:
-        """
-        Reciprocal Rank Fusion.
-        """
         fused = {}
 
-        def add_score(candidate: RetrievedChunk, rank: int, source: str) -> None:
+        def add_score(candidate: RetrievedChunk, rank: int) -> None:
             score = 1.0 / (k + rank)
 
             if candidate.id not in fused:
@@ -123,19 +156,20 @@ class HybridRetriever:
                     fusion_score=0.0,
                 )
 
-            fused[candidate.id].fusion_score = (fused[candidate.id].fusion_score or 0.0) + score
+            fused[candidate.id].fusion_score = (
+                fused[candidate.id].fusion_score or 0.0
+            ) + score
 
-            # keep the best available metadata and scores
             if candidate.dense_distance is not None:
                 fused[candidate.id].dense_distance = candidate.dense_distance
             if candidate.bm25_score is not None:
                 fused[candidate.id].bm25_score = candidate.bm25_score
 
         for rank, candidate in enumerate(dense_candidates, start=1):
-            add_score(candidate, rank, "dense")
+            add_score(candidate, rank)
 
         for rank, candidate in enumerate(bm25_candidates, start=1):
-            add_score(candidate, rank, "bm25")
+            add_score(candidate, rank)
 
         return sorted(
             fused.values(),
@@ -187,5 +221,5 @@ class HybridRetriever:
         if mode == "hybrid_rrf":
             return fused[:top_k]
 
-        rerank_pool = fused[:max(top_k, rerank_pool_size)]
+        rerank_pool = fused[: max(top_k, rerank_pool_size)]
         return self._rerank(query=query, candidates=rerank_pool, top_k=top_k)

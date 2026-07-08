@@ -1,34 +1,20 @@
 import os
-
 from dotenv import load_dotenv
-import google.generativeai as genai
-
-from src.llm.base import BaseLLM
-
-from google.api_core.exceptions import ResourceExhausted
 
 load_dotenv()
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 
-class GeminiProvider(BaseLLM):
-    def __init__(self, model_name: str = "gemini-2.5-flash") -> None:
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise ValueError(
-                "GOOGLE_API_KEY not found. Put it in your .env file."
-            )
+def get_gemini_llm(
+    model_name: str = "gemini-2.5-flash",
+    temperature: float = 0.2,
+):
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("GOOGLE_API_KEY not found in environment variables.")
 
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel(model_name)
-
-    def generate(self, prompt: str) -> str:
-        try:
-            response = self.model.generate_content(prompt)
-            return response.text
-
-        except ResourceExhausted:
-            return (
-            "Gemini quota exceeded. "
-            "Wait a minute and try again."
-        )
-    
+    return ChatGoogleGenerativeAI(
+        model=model_name,
+        temperature=temperature,
+        google_api_key=api_key,
+    )
